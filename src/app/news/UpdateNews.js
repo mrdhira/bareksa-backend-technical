@@ -1,12 +1,12 @@
 const Operation = require('src/app/Operation');
 const NewsDomain = require('src/domain/news/News');
 const Status = require('http-status');
-// const uuid = require('uuid/v4');
 
 class UpdateNews extends Operation {
-  constructor({ newsRepository }) {
+  constructor({ newsRepository, NewsStatusDomain }) {
     super();
     this.newsRepository = newsRepository;
+    this.NewsStatus = NewsStatusDomain;
   }
 
   async execute(id, data) {
@@ -21,6 +21,9 @@ class UpdateNews extends Operation {
         });
         this.emit(NOT_FOUND, response);
       } else {
+        if (data.status && typeof data.status == 'string') {
+          data.status = this.NewsStatus[data.status];
+        }
         const news = new NewsDomain({ id, ...data });
         // Check Validation
         const { valid, errors } = news.validate();
