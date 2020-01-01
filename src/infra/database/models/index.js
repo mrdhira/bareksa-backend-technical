@@ -1,10 +1,14 @@
-const sequelize = require('src/infra/sequelize')
+const Sequelize = require('sequelize');
+const ModelsLoader = require('src/infra/sequelize');
+const { db: config } = require('config');
+const logger = require('src/infra/logging/logger')
 
-module.exports = ({ logger, config }) => {
-  if (!config.db) {
-    logger.error('Database config file log not found, disabling database.')
-    return false;
-  }
-
-  return sequelize({ config, basePath: __dirname })
-};
+if(config) {
+  const sequelize = new Sequelize(config);
+  module.exports = ModelsLoader.load({
+    sequelize,
+    baseFolder: __dirname
+  });
+} else {
+  logger.error('Database configuration not found, disabling database.');
+}

@@ -12,8 +12,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "awilix": "^4.2.3",
-    "awilix-express": "^3.0.0",
+    "awilix": "3.0.9",
+    "awilix-express": "0.11.0",
     "bluebird": "^3.7.2",
     "body-parser": "^1.19.0",
     "compression": "^1.7.4",
@@ -29,9 +29,10 @@
     "sequelize-cli": "^5.5.1",
     "structure": "^1.8.0",
     "uuid": "^3.3.3",
-    "winston": "^3.2.1"
+    "winston": "3.2.1"
   },
   "devDependencies": {
+    "express-list-endpoints": "^4.0.1",
     "express-status-monitor": "^1.2.7",
     "nodemon": "^2.0.2"
   }

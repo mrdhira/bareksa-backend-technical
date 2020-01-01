@@ -1,17 +1,17 @@
 class Application {
-  constructor({ server, database, logger }) {
+  constructor({ server, sequelize, logger }) {
     this.server = server;
-    this.database = database;
+    this.sequelize = sequelize;
     this.logger = logger;
 
-    if (database && database.options.logging) {
-      database.options.logging = logger.info.bind(logger);
+    if (sequelize && sequelize.options.logging) {
+      sequelize.options.logging = logger.info.bind(logger);
     }
   }
 
   async start() {
-    if (this.database) {
-      await this.database.authenticate();
+    if (this.sequelize) {
+      await this.sequelize.authenticate();
     }
 
     await this.server.start();

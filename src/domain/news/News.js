@@ -9,9 +9,21 @@ const News = attributes({
     },
     required: true,
   },
-  title: String,
-  text: String,
-  status: String,
+  title: {
+    type: String,
+    required: false,
+    empty: true,
+  },
+  text: {
+    type: String,
+    required: false,
+    empty: true,
+  },
+  status: {
+    type: String,
+    required: false,
+    empty: true,
+  },
   createdAt: Date,
   updatedAt: Date,
 })(class News {

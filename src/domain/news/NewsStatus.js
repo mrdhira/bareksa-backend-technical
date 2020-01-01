@@ -1,16 +1,12 @@
 const NewsStatus = {
-  DRAFT: {
-    code: 1,
-    value: 'DRAFT',
-  },
-  DELETED: {
-    code: 2,
-    value: 'DELETED',
-  },
-  PUBLISHED: {
-    code: 3,
-    value: 'PUBLISHED',
-  },
+  // Word to Number
+  'DRAFT': 1,
+  'DELETED': 2,
+  'PUBLISHED': 3,
+  // Number to Word
+  1: 'DRAFT',
+  2: 'DELETED',
+  3: 'PUBLISHED',
 };
 
 module.exports = NewsStatus;

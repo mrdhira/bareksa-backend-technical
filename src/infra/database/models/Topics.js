@@ -11,7 +11,7 @@ module.exports = (sequelize, DataTypes) => {
   });
   Topics.associate = function(models) {
     Topics.belongsToMany(models.News, {
-      through: 'TopicsNews',
+      through: 'topics_news',
       foreignKey: 'topics_id',
     });
   };

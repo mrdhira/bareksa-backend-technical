@@ -1,4 +1,4 @@
-const { attributes } = require('structur');
+const { attributes } = require('structure');
 
 const Tags = attributes({
   id: {

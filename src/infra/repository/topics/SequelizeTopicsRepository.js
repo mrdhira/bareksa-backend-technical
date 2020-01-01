@@ -1,21 +1,40 @@
 const topicsMapper = require('./SequelizeTopicsMapper');
 
 class SequelizeTopicsRepository {
-  constructor({ TopicsModel, NewsModel }) {
+  constructor({ sequelize, TopicsModel, TopicsNewsModel }) {
+    this.sequelize = sequelize;
     this.TopicsModel = TopicsModel;
-    this.NewsModel = NewsModel;
+    this.TopicsNewsModel = TopicsNewsModel;
   }
 
-  getAll() {
-
+  async findOrCreateByName(topics) {
+    const sqlTrx = await this.sequelize.transaction();
+    try {
+      const [topic, created] = await this.TopicsModel.findOrCreate({
+        where: { name: topics.name },
+        defaults: { id: topics.id },
+      });
+      await sqlTrx.commit();
+      return topicsMapper.toEntity(topic);
+    } catch (error) {
+      await sqlTrx.rollback();
+      throw error;
+    }
   }
 
-  getById() {
-
-  }
-
-  findOrCreateByName(name) {
-
+  async mapTopicsNews(topicsId, newsId) {
+    const sqlTrx = await this.sequelize.transaction();
+    try {
+      const topicsNews = await this.TopicsNewsModel.create({
+        topics_id: topicsId,
+        news_id: newsId,
+      });
+      await sqlTrx.commit();
+      return topicsNews;
+    } catch (error) {
+      await sqlTrx.rollback();
+      throw error;
+    }
   }
 
 }

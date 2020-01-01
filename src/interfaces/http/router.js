@@ -6,7 +6,9 @@ const bodyParser = require('body-parser');
 const compression = require('compression')
 const controller = require('./utils/createControllers');
 
-module.exports = ({ config, containerMiddleware, httpLogger, errorHandler }) => {
+const httpLogger = require('./middlewares/httpLogger');
+
+module.exports = ({ config, logger, containerMiddleware }) => {
   const router = Router();
 
   if (config.env === 'development') {
@@ -14,7 +16,7 @@ module.exports = ({ config, containerMiddleware, httpLogger, errorHandler }) => 
   }
 
   if (config.env !== 'test') {
-    router.use(loggerMiddleware);
+    router.use(httpLogger(logger));
   }
 
   const apiRouter = Router();
@@ -39,12 +41,15 @@ module.exports = ({ config, containerMiddleware, httpLogger, errorHandler }) => 
     res.json({ name: 'Bareksa Backend Technical', version: config.version });
   });
 
-  apiRouter.use('/topics', controller('topics/TopicsController'));
   apiRouter.use('/news', controller('news/NewsController'));
   apiRouter.use('/tags', controller('tags/TagsController'));
   
   router.use('/', apiRouter);
-  router.use(errorHandler);
+
+  if (config.env === 'development') {
+    const listEndpoints = require('express-list-endpoints')
+    console.log(listEndpoints(router));
+  }
 
   return router;
 };

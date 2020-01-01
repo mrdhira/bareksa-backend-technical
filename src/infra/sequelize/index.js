@@ -1,32 +1,29 @@
 const fs = require('fs')
 const path = require('path')
-const Sequelize = require('sequelize')
 
-module.exports = ({ config, basePath, indexFile = 'index.js' }) => {
-  const sequelize = new Sequelize(config.db);
+module.exports = {
+  load({ sequelize, baseFolder, indexFile = 'index.js' }) {
+    const loaded = {};
 
-  const loaded = {
-    sequelize,
-  };
+    fs
+      .readdirSync(baseFolder)
+      .filter((file) => {
+        return (file.indexOf('.') !== 0) && (file !== indexFile) && (file.slice(-3) === '.js');
+      })
+      .forEach((file) => {
+        const model = sequelize['import'](path.join(baseFolder, file));
+        const modelName = file.split('.')[0];
+        loaded[modelName] = model;
+      });
 
-  const dir = path.join(basePath, '.');
+    Object.keys(loaded).forEach((modelName) => {
+      if(loaded[modelName].associate) {
+        loaded[modelName].associate(loaded);
+      }
+    });
 
-  fs
-    .readdirSync(dir)
-    .filter((file) => {
-      return (file.indexOf('.') !== 0) && (file !== indexFile) && (file.slice(-3) === '.js');
-    })
-    .forEach((file) => {
-      const modelDir = path.join(dir, file)
-      const model = sequelize.import(modelDir)
-      loaded[model.name] = model
-  })
+    loaded.sequelize = sequelize;
 
-  Object.keys(loaded).forEach(key => {
-    if ('associate' in loaded[key]) {
-      loaded[key].associate(loaded)
-    }
-  });
-
-  return loaded;
+    return loaded;
+  }
 };

@@ -12,12 +12,12 @@ module.exports = (sequelize, DataTypes) => {
     underscored: true,
   });
   News.associate = function(models) {
-    News.belongsTo(models.Topics, {
-      through: 'TopicsNews',
+    News.belongsToMany(models.Topics, {
+      through: 'topics_news',
       foreignKey: 'news_id',
     });
     News.belongsToMany(models.Tags, {
-      through: 'NewsTags',
+      through: 'news_tags',
       foreignKey: 'news_id',
     });
   };
